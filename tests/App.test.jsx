@@ -2,12 +2,26 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import App from "../src/app"; // Adjust import path
-import resultColor from "../src/libs/resultColor"; // Import resultColor
 
 // Mock the Firework component to check its props
 vi.mock("../src/components/Firework", () => ({
   default: vi.fn(({ color }) => <div data-testid="mock-firework" style={{ backgroundColor: color }}></div>),
 }));
+
+const getResultColor = (resultValue) => {
+  switch (resultValue) {
+  case "A":
+    return "#ff00ff";
+  case "B":
+    return "#ffd700";
+  case "C":
+    return "#ff0000";
+  case "D":
+    return "#0000ff";
+  default:
+    return "#ffffff";
+  }
+};
 
 describe("App component", () => {
   let fetchSpy;
@@ -43,7 +57,7 @@ describe("App component", () => {
     await waitFor(() => {
       expect(screen.getByText(gachaResult)).toBeInTheDocument();
       // Check if Firework component was rendered with the correct color
-      expect(screen.getByTestId("mock-firework")).toHaveStyle(`background-color: ${resultColor(gachaResult)}`);
+      expect(screen.getByTestId("mock-firework")).toHaveStyle(`background-color: ${getResultColor(gachaResult)}`);
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
