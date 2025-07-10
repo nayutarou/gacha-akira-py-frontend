@@ -1,0 +1,10 @@
+.DS_Store
+/node_modules/
+
+# React Router
+/.react-router/
+/build/
+
+#後々dockerをいれるけど今は必要ない
+Dockerfile
+.dockerignore
