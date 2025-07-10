@@ -1,54 +1,39 @@
+import js from "@eslint/js";
 import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
-import { fixupConfigAsPlugin } from "@eslint/compat";
-import pluginReactHooks from "eslint-plugin-react-hooks";
-import pluginJsxA11y from "eslint-plugin-jsx-a11y";
-import tseslint from "typescript-eslint";
-import prettierConfig from "eslint-config-prettier";
+import reactHooks from "eslint-plugin-react-hooks";
 
-export default tseslint.config(
-  {
-    ignores: [
-      "node_modules",
-      "build",
-      "dist",
-      "public",
-    ],
-  },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  fixupConfigAsPlugin(pluginReactConfig),
-  {
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    plugins: {
-      "react-hooks": pluginReactHooks,
-      "jsx-a11y": pluginJsxA11y,
-    },
-    rules: {
-      ...pluginReactHooks.configs.recommended.rules,
-      ...pluginJsxA11y.configs.recommended.rules,
-      // Add custom rules here
-    },
-    settings: {
-      react: {
-        version: "detect",
-      },
+export default [{ ignores: ["dist", ".vite"] }, {
+  files: ["**/*.{js,jsx}"],
+  languageOptions: {
+    ecmaVersion: 2020,
+    globals: { ...globals.browser, ...globals.jest },
+    parserOptions: {
+      ecmaVersion: "latest",
+      ecmaFeatures: { jsx: true },
+      sourceType: "module",
     },
   },
-  prettierConfig,
-);
+  plugins: {
+    "react-hooks": reactHooks,
+  },
+  rules: {
+    ...js.configs.recommended.rules,
+    ...reactHooks.configs.recommended.rules,
+    "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+    "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0 }],
+    "no-trailing-spaces": "error",
+    "eol-last": ["error", "always"],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "indent": ["error", 2],
+    "quotes": ["error", "double", { avoidEscape: true }],
+  },
+}, {
+  files: ["tests/**/*.{js,jsx,ts,tsx}"],
+  languageOptions: {
+    globals: { ...globals.jest, ...globals.node },
+  },
+  rules: {
+    "no-undef": "off", // Allow global in test files
+  },
+}];
