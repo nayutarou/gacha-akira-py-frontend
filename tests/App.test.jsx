@@ -10,16 +10,16 @@ vi.mock("../src/components/Firework", () => ({
 
 const getResultColor = (resultValue) => {
   switch (resultValue) {
-    case "A":
-      return "#ff00ff";
-    case "B":
-      return "#ffd700";
-    case "C":
-      return "#ff0000";
-    case "D":
-      return "#0000ff";
-    default:
-      return "#ffffff";
+  case "A":
+    return "#ff00ff";
+  case "B":
+    return "#ffd700";
+  case "C":
+    return "#ff0000";
+  case "D":
+    return "#0000ff";
+  default:
+    return "#ffffff";
   }
 };
 
