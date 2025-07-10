@@ -4,15 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        'result-A': '#ff00ff',
-        'result-B': '#ffd700',
-        'result-C': '#ff0000',
-        'result-D': '#0000ff',
+        "result-A": "#ff00ff",
+        "result-B": "#ffd700",
+        "result-C": "#ff0000",
+        "result-D": "#0000ff",
       },
       textShadow: {
-        sm: '0 1px 2px var(--tw-shadow-color)',
-        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
-        lg: '0 8px 16px var(--tw-shadow-color)',
+        sm: "0 1px 2px var(--tw-shadow-color)",
+        DEFAULT: "0 2px 4px var(--tw-shadow-color)",
+        lg: "0 8px 16px var(--tw-shadow-color)",
       },
       animation: {
         "burst-in": "burst-in 0.5s ease-out forwards",
