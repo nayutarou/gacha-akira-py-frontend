@@ -1,87 +1,54 @@
-# Welcome to React Router!
+# ガチャアキラ Python フロントエンド
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Python バックエンドと連携するように設計された、ガチャシステム用の React フロントエンドアプリケーションです。
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 特徴
 
-## Features
+- **React 19**: 最新の React バージョンを使用したモダンなフロントエンド開発。
+- **Vite**: 高速な開発サーバーと効率的なバンドル。
+- **Tailwind CSS**: ユーティリティファーストの CSS フレームワークで、素早いスタイリングを実現。
+- **Python バックエンド連携**: `http://localhost:8000/gacha` で動作する Python バックエンドと通信します。
+- **ガチャ結果表示**: ガチャ結果を動的な視覚効果（花火）とともに表示します。
+- **包括的なテスト**: Vitest と React Testing Library を使用したコンポーネントとユーティリティの単体テスト。
+- **CORS 処理**: Cross-Origin Resource Sharing (CORS) の問題を処理するために Vite プロキシを設定済みです。
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## はじめに
 
-## Getting Started
+### 前提条件
 
-### Installation
+- Node.js と npm (または yarn/pnpm)
+- `http://localhost:8000` で動作する Python バックエンドアプリケーション。
 
-Install the dependencies:
+### インストール
+
+プロジェクトの依存関係をインストールします。
 
 ```bash
 npm install
 ```
 
-### Development
+### 開発
 
-Start the development server with HMR:
+Hot Module Replacement (HMR) を使用して開発サーバーを起動します。
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+アプリケーションは `http://localhost:5173` で利用可能になります。
 
-## Building for Production
+### テストの実行
 
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+テストスイートを実行します。
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+npm run test
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## バックエンド情報
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+このフロントエンドは、`http://localhost:8000` で動作する Python バックエンドを想定しています。ガチャのエンドポイントは `http://localhost:8000/gacha` で、`result` キーを持つ JSON オブジェクト（例: `{ "result": "A" }`）を返す必要があります。
 
-### DIY Deployment
+## スタイリング
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+このテンプレートはスタイリングに [Tailwind CSS](https://tailwindcss.com/) を使用しています。`tailwind.config.js` と `src/styles.css` を変更して、外観をカスタマイズできます。
