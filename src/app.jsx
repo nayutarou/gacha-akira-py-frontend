@@ -2,11 +2,25 @@ import { useState } from "react";
 import Result from "./components/Result";
 import Button from "./components/Button";
 import Firework from "./components/Firework";
-import resultColor from "./libs/resultColor";
 
 function App() {
   const [result, setResult] = useState({ result: "X" });
   const [fireworks, setFireworks] = useState([]);
+
+  const getResultColor = (resultValue) => {
+    switch (resultValue) {
+    case "A":
+      return "#ff00ff";
+    case "B":
+      return "#ffd700";
+    case "C":
+      return "#ff0000";
+    case "D":
+      return "#0000ff";
+    default:
+      return "#ffffff";
+    }
+  };
 
   const handleClick = async () => {
     try {
@@ -19,7 +33,7 @@ function App() {
         id: Date.now(),
         x: Math.random() * 80 + 10, // 10% to 90% of screen width
         y: Math.random() * 40 + 10, // 10% to 50% of screen height
-        color: resultColor(data.result), // カラーコードを直接渡す
+        color: getResultColor(data.result), // カラーコードを直接渡す
       };
       setFireworks((prev) => [...prev, newFirework]);
 
