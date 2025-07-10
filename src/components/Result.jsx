@@ -1,5 +1,3 @@
-import resultColor from "../libs/resultColor";
-
 const Result = ({ result }) => {
   const resultClassName = `result-${result.result}`;
 
@@ -9,7 +7,7 @@ const Result = ({ result }) => {
         className={`relative p-8 rounded-full flex items-center justify-center animate-fadeInScale bg-gradient-to-r from-${resultClassName} to-${resultClassName}/50 shadow-lg shadow-${resultClassName}/50`}
       >
         <h1
-          className={`text-8xl font-extrabold text-white text-shadow-lg`}
+          className={"text-8xl font-extrabold text-white text-shadow-lg"}
           style={{ textShadow: `0 0 20px var(--tw-colors-${resultClassName})` }}
         >
           {result.result}
