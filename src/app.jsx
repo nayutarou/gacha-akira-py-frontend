@@ -6,6 +6,7 @@ import Firework from "./components/Firework";
 function App() {
   const [result, setResult] = useState({ result: "X" });
   const [fireworks, setFireworks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getResultColor = (resultValue) => {
     switch (resultValue) {
@@ -23,6 +24,7 @@ function App() {
   };
 
   const handleClick = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch("http://localhost:8000/gacha");
       const data = await response.json();
@@ -43,17 +45,25 @@ function App() {
       }, 2000);
     } catch (error) {
       console.error("Failed to fetch gacha result:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden text-center bg-gray-900">
+    <div className="flex items-center justify-center h-screen overflow-hidden text-center gacha-background">
       {fireworks.map((fw) => (
         <Firework key={fw.id} x={fw.x} y={fw.y} color={fw.color} />
       ))}
       <div>
-        <Result result={result} />
-        <Button handleClick={handleClick} />
+        {isLoading ? (
+          <div className="mb-8 text-4xl font-bold text-white animate-pulse">
+            ...
+          </div>
+        ) : (
+          <Result result={result} />
+        )}
+        <Button handleClick={handleClick} isLoading={isLoading} />
       </div>
     </div>
   );
