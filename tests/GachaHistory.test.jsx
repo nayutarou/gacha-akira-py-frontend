@@ -19,9 +19,9 @@ describe("GachaHistory component", () => {
 
     expect(screen.queryByText("まだ履歴はありません。")).not.toBeInTheDocument();
     expect(screen.getByRole("list")).toBeInTheDocument();
-    expect(screen.getByText("A")).toBeInTheDocument();
-    expect(screen.getByText("B")).toBeInTheDocument();
-    expect(screen.getByText("C")).toBeInTheDocument();
+    expect(screen.getByText("第3回: A")).toBeInTheDocument();
+    expect(screen.getByText("第2回: B")).toBeInTheDocument();
+    expect(screen.getByText("第1回: C")).toBeInTheDocument();
   });
 
   it("renders multiple items of the same result correctly", () => {
@@ -32,8 +32,8 @@ describe("GachaHistory component", () => {
     ];
     render(<GachaHistory history={mockHistory} />);
 
-    const aResults = screen.getAllByText("A");
+    const aResults = screen.getAllByText(/第\d+回: A/);
     expect(aResults).toHaveLength(2);
-    expect(screen.getByText("B")).toBeInTheDocument();
+    expect(screen.getByText(/第\d+回: B/)).toBeInTheDocument();
   });
 });
