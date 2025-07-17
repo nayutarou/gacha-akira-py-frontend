@@ -8,7 +8,6 @@ const TenPullDisplay = ({ results, rarityTexts }) => {
         <Result
           key={index}
           result={result}
-          rarityText={rarityTexts[result.result]}
           small={true}
         />
       ))}

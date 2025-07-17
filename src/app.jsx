@@ -9,7 +9,7 @@ import TenPullDisplay from "./components/TenPullDisplay";
 
 function App() {
   const { addGachaResult, resultCounts } = useGacha();
-  const [singleResult, setSingleResult] = useState({ result: "X" });
+  const [singleResult, setSingleResult] = useState({ result: "" });
   const [tenPullResults, setTenPullResults] = useState([]);
   const [isTenPull, setIsTenPull] = useState(false);
 
@@ -18,7 +18,14 @@ function App() {
     B: "SR",
     C: "R",
     D: "N",
-    X: "ハズレ",
+  };
+
+  const getDisplayResult = () => {
+    if (singleResult.result === "") {
+      return { result: "ガチャを引きましょう" };
+    } else {
+      return singleResult;
+    }
   };
 
   const handleClick = async () => {
@@ -57,7 +64,7 @@ function App() {
         {isTenPull ? (
           <TenPullDisplay results={tenPullResults} rarityTexts={rarityTexts} />
         ) : (
-          <Result result={singleResult} rarityText={rarityTexts[singleResult.result]} />
+          <Result result={getDisplayResult()} />
         )}
         <div className="flex justify-center space-x-4 mt-4">
           <Button handleClick={handleClick} text="ガチャを引く" />

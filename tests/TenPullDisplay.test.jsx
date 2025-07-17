@@ -3,21 +3,14 @@ import { describe, it, expect } from "vitest";
 import TenPullDisplay from "../src/components/TenPullDisplay";
 
 describe("TenPullDisplay component", () => {
-  const rarityTexts = {
-    A: "SSR",
-    B: "SR",
-    C: "R",
-    D: "N",
-    X: "ハズレ",
-  };
-
   it("renders 10 Result components with correct data", () => {
     const mockResults = [
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" },
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" },
+      { result: "A" }, { result: "B" },
     ];
 
-    render(<TenPullDisplay results={mockResults} rarityTexts={rarityTexts} />);
+    render(<TenPullDisplay results={mockResults} />);
 
     // Check if 10 Result components are rendered
     const resultContainers = screen.getAllByTestId("result-container");
@@ -27,7 +20,6 @@ describe("TenPullDisplay component", () => {
     mockResults.forEach((mockResult, index) => {
       const currentResultContainer = resultContainers[index];
       expect(within(currentResultContainer).getByRole("heading", { level: 1 })).toHaveTextContent(mockResult.result);
-      expect(within(currentResultContainer).getByText(rarityTexts[mockResult.result])).toBeInTheDocument();
     });
   });
 
@@ -37,7 +29,7 @@ describe("TenPullDisplay component", () => {
       { result: "B" }, { result: "B" }, { result: "B" }, { result: "B" }, { result: "B" },
     ];
 
-    render(<TenPullDisplay results={mockResults} rarityTexts={rarityTexts} />);
+    render(<TenPullDisplay results={mockResults} />);
 
     const resultHeadings = screen.getAllByRole("heading", { level: 1 });
     expect(resultHeadings).toHaveLength(10);

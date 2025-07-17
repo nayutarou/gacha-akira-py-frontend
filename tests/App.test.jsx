@@ -30,7 +30,7 @@ describe("App component", () => {
 
   it("renders the initial state correctly", () => {
     renderApp();
-    expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "ガチャを引きましょう" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ガチャを引く" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "10連ガチャを引く" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "履歴を見る" })).toBeInTheDocument();
@@ -38,7 +38,6 @@ describe("App component", () => {
     expect(screen.getByText("B: 0回")).toBeInTheDocument();
     expect(screen.getByText("C: 0回")).toBeInTheDocument();
     expect(screen.getByText("D: 0回")).toBeInTheDocument();
-    expect(screen.getByText("X: 0回")).toBeInTheDocument();
   });
 
   // Test cases for different gacha results based on backend probabilities
@@ -56,7 +55,6 @@ describe("App component", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("heading", { level: 1, name: gachaResult })).toBeInTheDocument();
-      expect(screen.getByText(rarityText)).toBeInTheDocument();
       expect(screen.getByText(`${gachaResult}: 1回`)).toBeInTheDocument();
     });
 
@@ -95,7 +93,6 @@ describe("App component", () => {
       expect(screen.getByText("B: 2回")).toBeInTheDocument();
       expect(screen.getByText("C: 2回")).toBeInTheDocument();
       expect(screen.getByText("D: 2回")).toBeInTheDocument();
-      expect(screen.getByText("X: 2回")).toBeInTheDocument();
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(10);
@@ -119,7 +116,7 @@ describe("App component", () => {
     });
 
     // The result should not change from the initial state
-    expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "ガチャを引きましょう" })).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
   });
