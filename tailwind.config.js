@@ -4,10 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        "result-A": "#ff00ff",
-        "result-B": "#ffd700",
-        "result-C": "#ff0000",
-        "result-D": "#0000ff",
+        "result-A": "#FF4081",
+        "result-B": "#FFEB3B",
+        "result-C": "#FF5722",
+        "result-D": "#2196F3",
+        "result-X": "#E0E0E0",
       },
       textShadow: {
         sm: "0 1px 2px var(--tw-shadow-color)",
