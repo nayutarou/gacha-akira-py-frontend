@@ -10,7 +10,7 @@ const GachaHistory = ({ history }) => {
         <ul className="space-y-2">
           {history.map((item, index) => (
             <li key={index} className={`text-${item.result} text-lg`}>
-              <span className="font-semibold">{item.result}</span>
+              <span className="font-semibold">第{history.length - index}回: {item.result}</span>
             </li>
           ))}
         </ul>
