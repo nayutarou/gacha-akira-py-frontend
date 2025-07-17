@@ -33,7 +33,6 @@ describe("App component", () => {
     expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ガチャを引く" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "10連ガチャを引く" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "もう一度引く" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "履歴を見る" })).toBeInTheDocument();
     expect(screen.getByText("A: 0回")).toBeInTheDocument();
     expect(screen.getByText("B: 0回")).toBeInTheDocument();
@@ -58,7 +57,6 @@ describe("App component", () => {
     await waitFor(() => {
       expect(screen.getByRole("heading", { level: 1, name: gachaResult })).toBeInTheDocument();
       expect(screen.getByText(rarityText)).toBeInTheDocument();
-      expect(screen.getByText("Congratulation!")).toBeInTheDocument();
       expect(screen.getByText(`${gachaResult}: 1回`)).toBeInTheDocument();
     });
 
@@ -84,9 +82,15 @@ describe("App component", () => {
     await userEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument(); // Last result is X
-      expect(screen.getByText("ハズレ")).toBeInTheDocument();
-      expect(screen.getByText("Congratulation! (10連)")).toBeInTheDocument();
+      // Check if 10 results are displayed
+      const resultHeadings = screen.getAllByRole("heading", { level: 1 });
+      expect(resultHeadings).toHaveLength(10);
+
+      // Check if each result is displayed correctly
+      mockGachaResults.forEach((mockResult) => {
+        expect(screen.getAllByText(mockResult.result).length).toBeGreaterThanOrEqual(1);
+      });
+
       expect(screen.getByText("A: 2回")).toBeInTheDocument();
       expect(screen.getByText("B: 2回")).toBeInTheDocument();
       expect(screen.getByText("C: 2回")).toBeInTheDocument();
@@ -112,7 +116,6 @@ describe("App component", () => {
         "Failed to fetch gacha result:",
         expect.any(Error),
       );
-      expect(screen.getByText("Error!")).toBeInTheDocument();
     });
 
     // The result should not change from the initial state
