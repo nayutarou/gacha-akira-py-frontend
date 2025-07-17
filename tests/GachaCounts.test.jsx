@@ -9,7 +9,6 @@ describe("GachaCounts component", () => {
       B: 0,
       C: 0,
       D: 0,
-      X: 0,
     };
     render(<GachaCounts resultCounts={initialCounts} />);
 
@@ -17,7 +16,6 @@ describe("GachaCounts component", () => {
     expect(screen.getByText("B: 0回")).toBeInTheDocument();
     expect(screen.getByText("C: 0回")).toBeInTheDocument();
     expect(screen.getByText("D: 0回")).toBeInTheDocument();
-    expect(screen.getByText("X: 0回")).toBeInTheDocument();
   });
 
   it("renders correctly with updated counts", () => {
@@ -26,7 +24,6 @@ describe("GachaCounts component", () => {
       B: 3,
       C: 10,
       D: 2,
-      X: 15,
     };
     render(<GachaCounts resultCounts={updatedCounts} />);
 
@@ -34,7 +31,6 @@ describe("GachaCounts component", () => {
     expect(screen.getByText("B: 3回")).toBeInTheDocument();
     expect(screen.getByText("C: 10回")).toBeInTheDocument();
     expect(screen.getByText("D: 2回")).toBeInTheDocument();
-    expect(screen.getByText("X: 15回")).toBeInTheDocument();
   });
 
   it("renders correctly with some zero and some non-zero counts", () => {
@@ -43,7 +39,6 @@ describe("GachaCounts component", () => {
       B: 0,
       C: 2,
       D: 0,
-      X: 3,
     };
     render(<GachaCounts resultCounts={mixedCounts} />);
 
@@ -51,6 +46,5 @@ describe("GachaCounts component", () => {
     expect(screen.getByText("B: 0回")).toBeInTheDocument();
     expect(screen.getByText("C: 2回")).toBeInTheDocument();
     expect(screen.getByText("D: 0回")).toBeInTheDocument();
-    expect(screen.getByText("X: 3回")).toBeInTheDocument();
   });
 });
