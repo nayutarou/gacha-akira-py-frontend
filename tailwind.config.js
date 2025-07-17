@@ -1,13 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    { pattern: /bg-(A|B|C|D|X)/ },
+    { pattern: /shadow-(A|B|C|D|X)/ },
+  ],
   theme: {
     extend: {
       colors: {
-        "result-A": "#ff00ff",
-        "result-B": "#ffd700",
-        "result-C": "#ff0000",
-        "result-D": "#0000ff",
+        A: "#FFD700", // Gold
+        B: "#C0C0C0", // Silver
+        C: "#4CAF50", // Green
+        D: "#2196F3", // Blue
+        X: "#9E9E9E", // Grey
       },
       textShadow: {
         sm: "0 1px 2px var(--tw-shadow-color)",

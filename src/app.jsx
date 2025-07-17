@@ -1,69 +1,79 @@
 import { useState } from "react";
 import Result from "./components/Result";
 import Button from "./components/Button";
-import Firework from "./components/Firework";
+import { useGacha } from "./GachaContext";
+import { Link } from "react-router-dom";
+import GachaCounts from "./components/GachaCounts";
+
+import TenPullDisplay from "./components/TenPullDisplay";
 
 function App() {
-  const [result, setResult] = useState({ result: "X" });
-  const [fireworks, setFireworks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { addGachaResult, resultCounts } = useGacha();
+  const [singleResult, setSingleResult] = useState({ result: "" });
+  const [tenPullResults, setTenPullResults] = useState([]);
+  const [isTenPull, setIsTenPull] = useState(false);
 
-  const getResultColor = (resultValue) => {
-    switch (resultValue) {
-    case "A":
-      return "#ff00ff";
-    case "B":
-      return "#ffd700";
-    case "C":
-      return "#ff0000";
-    case "D":
-      return "#0000ff";
-    default:
-      return "#ffffff";
+  const rarityTexts = {
+    A: "SSR",
+    B: "SR",
+    C: "R",
+    D: "N",
+  };
+
+  const getDisplayResult = () => {
+    if (singleResult.result === "") {
+      return { result: "ガチャを引きましょう" };
+    } else {
+      return singleResult;
     }
   };
 
   const handleClick = async () => {
-    setIsLoading(true);
+    setIsTenPull(false);
     try {
-      const response = await fetch("http://localhost:8000/gacha");
+      const response = await fetch("http://127.0.0.1:8000/gacha");
       const data = await response.json();
       console.log(data);
-      setResult(data);
-
-      const newFirework = {
-        id: Date.now(),
-        x: Math.random() * 80 + 10, // 10% to 90% of screen width
-        y: Math.random() * 40 + 10, // 10% to 50% of screen height
-        color: getResultColor(data.result), // カラーコードを直接渡す
-      };
-      setFireworks((prev) => [...prev, newFirework]);
-
-      // Remove the firework after animation
-      setTimeout(() => {
-        setFireworks((prev) => prev.filter((fw) => fw.id !== newFirework.id));
-      }, 2000);
+      setSingleResult(data);
+      addGachaResult(data);
     } catch (error) {
       console.error("Failed to fetch gacha result:", error);
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const handleClickTen = async () => {
+    setIsTenPull(true);
+    const results = [];
+    try {
+      for (let i = 0; i < 10; i++) {
+        const response = await fetch("http://127.0.0.1:8000/gacha");
+        const data = await response.json();
+        console.log(data);
+        results.push(data);
+        addGachaResult(data);
+      }
+      setTenPullResults(results);
+    } catch (error) {
+      console.error("Failed to fetch gacha result:", error);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden text-center gacha-background">
-      {fireworks.map((fw) => (
-        <Firework key={fw.id} x={fw.x} y={fw.y} color={fw.color} />
-      ))}
-      <div>
-        {isLoading ? (
-          <div className="mb-8 text-4xl font-bold text-white animate-pulse">
-            ...
-          </div>
+    <div className="flex items-center justify-center min-h-screen text-center gacha-main-background">
+      <div className="flex flex-col items-center w-full h-full justify-center">
+        {isTenPull ? (
+          <TenPullDisplay results={tenPullResults} rarityTexts={rarityTexts} />
         ) : (
-          <Result result={result} />
+          <Result result={getDisplayResult()} />
         )}
-        <Button handleClick={handleClick} isLoading={isLoading} />
+        <div className="flex justify-center space-x-4 mt-4">
+          <Button handleClick={handleClick} text="ガチャを引く" />
+          <Button handleClick={handleClickTen} text="10連ガチャを引く" />
+        </div>
+        <GachaCounts resultCounts={resultCounts} />
+        <Link to="/history" className="mt-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors">
+          履歴を見る
+        </Link>
       </div>
     </div>
   );
