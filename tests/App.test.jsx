@@ -41,7 +41,7 @@ describe("App component", () => {
   });
 
   // Test cases for different gacha results based on backend probabilities
-  it.each([["A", "SSR"], ["B", "SR"], ["C", "R"], ["D", "N"]])("fetches gacha result %s and updates the display", async (gachaResult, rarityText) => {
+  it.each([["A", "SSR"], ["B", "SR"], ["C", "R"], ["D", "N"]])("fetches gacha result %s and updates the display", async (gachaResult) => {
     const mockGachaResult = { result: gachaResult };
     fetchSpy.mockResolvedValueOnce({
       ok: true,
