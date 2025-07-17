@@ -1,27 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { BrowserRouter } from "react-router-dom";
+import { GachaProvider } from "../src/GachaContext";
 import App from "../src/app"; // Adjust import path
-
-// Mock the Firework component to check its props
-vi.mock("../src/components/Firework", () => ({
-  default: vi.fn(({ color }) => <div data-testid="mock-firework" style={{ backgroundColor: color }}></div>),
-}));
-
-const getResultColor = (resultValue) => {
-  switch (resultValue) {
-  case "A":
-    return "#ff00ff";
-  case "B":
-    return "#ffd700";
-  case "C":
-    return "#ff0000";
-  case "D":
-    return "#0000ff";
-  default:
-    return "#ffffff";
-  }
-};
 
 describe("App component", () => {
   let fetchSpy;
@@ -29,48 +11,100 @@ describe("App component", () => {
   beforeEach(() => {
     fetchSpy = vi.spyOn(global, "fetch");
     fetchSpy.mockClear();
+    vi.clearAllMocks(); // Clear mocks before each test
   });
 
   afterEach(() => {
     fetchSpy.mockRestore();
   });
 
+  const renderApp = () => {
+    render(
+      <BrowserRouter>
+        <GachaProvider>
+          <App />
+        </GachaProvider>
+      </BrowserRouter>,
+    );
+  };
+
   it("renders the initial state correctly", () => {
-    render(<App />);
-    expect(screen.getByText("X")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /ガチャを引く/i })).toBeInTheDocument();
+    renderApp();
+    expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ガチャを引く" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "10連ガチャを引く" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "もう一度引く" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "履歴を見る" })).toBeInTheDocument();
+    expect(screen.getByText("A: 0回")).toBeInTheDocument();
+    expect(screen.getByText("B: 0回")).toBeInTheDocument();
+    expect(screen.getByText("C: 0回")).toBeInTheDocument();
+    expect(screen.getByText("D: 0回")).toBeInTheDocument();
+    expect(screen.getByText("X: 0回")).toBeInTheDocument();
   });
 
   // Test cases for different gacha results based on backend probabilities
-  it.each([["A"], ["B"], ["C"], ["D"]])("fetches gacha result %s and updates the display", async (gachaResult) => {
+  it.each([["A", "SSR"], ["B", "SR"], ["C", "R"], ["D", "N"]])("fetches gacha result %s and updates the display", async (gachaResult, rarityText) => {
     const mockGachaResult = { result: gachaResult };
     fetchSpy.mockResolvedValueOnce({
       ok: true,
       json: async () => mockGachaResult,
     });
 
-    render(<App />);
+    renderApp();
 
-    const button = screen.getByRole("button", { name: /ガチャを引く/i });
+    const button = screen.getByRole("button", { name: "ガチャを引く" });
     await userEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByText(gachaResult)).toBeInTheDocument();
-      // Check if Firework component was rendered with the correct color
-      expect(screen.getByTestId("mock-firework")).toHaveStyle(`background-color: ${getResultColor(gachaResult)}`);
+      expect(screen.getByRole("heading", { level: 1, name: gachaResult })).toBeInTheDocument();
+      expect(screen.getByText(rarityText)).toBeInTheDocument();
+      expect(screen.getByText("Congratulation!")).toBeInTheDocument();
+      expect(screen.getByText(`${gachaResult}: 1回`)).toBeInTheDocument();
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    expect(fetchSpy).toHaveBeenCalledWith("http://localhost:8000/gacha");
+    expect(fetchSpy).toHaveBeenCalledWith("http://127.0.0.1:8000/gacha");
+  });
+
+  it("fetches 10 gacha results and updates the display", async () => {
+    const mockGachaResults = [
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
+    ];
+    mockGachaResults.forEach((mockResult) => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResult,
+      });
+    });
+
+    renderApp();
+
+    const button = screen.getByRole("button", { name: "10連ガチャを引く" });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument(); // Last result is X
+      expect(screen.getByText("ハズレ")).toBeInTheDocument();
+      expect(screen.getByText("Congratulation! (10連)")).toBeInTheDocument();
+      expect(screen.getByText("A: 2回")).toBeInTheDocument();
+      expect(screen.getByText("B: 2回")).toBeInTheDocument();
+      expect(screen.getByText("C: 2回")).toBeInTheDocument();
+      expect(screen.getByText("D: 2回")).toBeInTheDocument();
+      expect(screen.getByText("X: 2回")).toBeInTheDocument();
+    });
+
+    expect(fetchSpy).toHaveBeenCalledTimes(10);
+    expect(fetchSpy).toHaveBeenCalledWith("http://127.0.0.1:8000/gacha");
   });
 
   it("handles fetch error gracefully", async () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     fetchSpy.mockImplementationOnce(() => Promise.reject(new Error("Network error")));
 
-    render(<App />);
+    renderApp();
 
-    const button = screen.getByRole("button", { name: /ガチャを引く/i });
+    const button = screen.getByRole("button", { name: "ガチャを引く" });
     await userEvent.click(button);
 
     await waitFor(() => {
@@ -78,10 +112,11 @@ describe("App component", () => {
         "Failed to fetch gacha result:",
         expect.any(Error),
       );
+      expect(screen.getByText("Error!")).toBeInTheDocument();
     });
 
     // The result should not change from the initial state
-    expect(screen.getByText("X")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "X" })).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
   });
