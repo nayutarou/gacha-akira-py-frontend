@@ -11,7 +11,6 @@ export const GachaProvider = ({ children }) => {
     B: 0,
     C: 0,
     D: 0,
-    X: 0,
   });
 
   const addGachaResult = (newResult) => {
@@ -22,8 +21,18 @@ export const GachaProvider = ({ children }) => {
     }));
   };
 
+  const resetGachaHistory = () => {
+    setGachaHistory([]);
+    setResultCounts({
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+    });
+  };
+
   return (
-    <GachaContext.Provider value={{ gachaHistory, resultCounts, addGachaResult }}>
+    <GachaContext.Provider value={{ gachaHistory, resultCounts, addGachaResult, resetGachaHistory }}>
       {children}
     </GachaContext.Provider>
   );
