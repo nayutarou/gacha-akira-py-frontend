@@ -1,8 +1,9 @@
-const Button = ({ handleClick, text }) => {
+const Button = ({ handleClick, text, className }) => {
+  const defaultClassName = "px-8 py-4 text-2xl font-bold text-white transition-all duration-300 rounded-full shadow-lg cursor-pointer bg-gradient-to-r from-pink-500 to-yellow-500 shadow-pink-500/50 hover:scale-105 hover:shadow-xl";
   return (
     <button
       onClick={handleClick}
-      className="px-8 py-4 text-2xl font-bold text-white bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full shadow-lg shadow-pink-500/50 cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-300"
+      className={className || defaultClassName}
     >
       {text}
     </button>
