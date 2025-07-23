@@ -45,8 +45,8 @@ describe("HistoryPage component", () => {
     );
 
     expect(screen.getByRole("heading", { name: "ガチャ履歴", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("第2回: A")).toBeInTheDocument();
-    expect(screen.getByText("第1回: B")).toBeInTheDocument();
+    expect(screen.getByText("2回目: A")).toBeInTheDocument();
+    expect(screen.getByText("1回目: B")).toBeInTheDocument();
     expect(screen.getByText("ガチャページに戻る")).toBeInTheDocument();
   });
 

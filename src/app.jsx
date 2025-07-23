@@ -8,7 +8,7 @@ import GachaCounts from "./components/GachaCounts";
 import TenPullDisplay from "./components/TenPullDisplay";
 
 function App() {
-  const { addGachaResult, resultCounts } = useGacha();
+  const { addGachaResult, resultCounts, resetGachaHistory } = useGacha();
   const [singleResult, setSingleResult] = useState({ result: "" });
   const [tenPullResults, setTenPullResults] = useState([]);
   const [isTenPull, setIsTenPull] = useState(false);
@@ -58,22 +58,31 @@ function App() {
     }
   };
 
+  const handleReset = () => {
+    resetGachaHistory();
+    setSingleResult({ result: "" });
+    setTenPullResults([]);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen text-center gacha-main-background">
-      <div className="flex flex-col items-center w-full h-full justify-center">
+      <div className="flex flex-col items-center justify-center w-full h-full">
         {isTenPull ? (
           <TenPullDisplay results={tenPullResults} rarityTexts={rarityTexts} />
         ) : (
           <Result result={getDisplayResult()} />
         )}
-        <div className="flex justify-center space-x-4 mt-4">
+        <div className="flex justify-center mt-4 space-x-4">
           <Button handleClick={handleClick} text="ガチャを引く" />
           <Button handleClick={handleClickTen} text="10連ガチャを引く" />
         </div>
         <GachaCounts resultCounts={resultCounts} />
-        <Link to="/history" className="mt-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors">
-          履歴を見る
-        </Link>
+        <div className="flex items-center justify-center mt-4 space-x-4">
+          <Link to="/history" className="px-4 py-2 text-sm text-gray-800 transition-colors bg-gray-300 rounded-md hover:bg-gray-400">
+            履歴を見る
+          </Link>
+          <Button handleClick={handleReset} text="リセット" className="px-4 py-2 text-sm text-white transition-colors bg-red-500 rounded-md cursor-pointer hover:bg-red-600" />
+        </div>
       </div>
     </div>
   );

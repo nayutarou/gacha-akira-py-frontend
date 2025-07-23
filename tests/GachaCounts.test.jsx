@@ -12,10 +12,7 @@ describe("GachaCounts component", () => {
     };
     render(<GachaCounts resultCounts={initialCounts} />);
 
-    expect(screen.getByText("A: 0回")).toBeInTheDocument();
-    expect(screen.getByText("B: 0回")).toBeInTheDocument();
-    expect(screen.getByText("C: 0回")).toBeInTheDocument();
-    expect(screen.getByText("D: 0回")).toBeInTheDocument();
+    expect(screen.getByText("まだガチャが実行されていません。")).toBeInTheDocument();
   });
 
   it("renders correctly with updated counts", () => {
@@ -27,10 +24,10 @@ describe("GachaCounts component", () => {
     };
     render(<GachaCounts resultCounts={updatedCounts} />);
 
-    expect(screen.getByText("A: 5回")).toBeInTheDocument();
-    expect(screen.getByText("B: 3回")).toBeInTheDocument();
-    expect(screen.getByText("C: 10回")).toBeInTheDocument();
-    expect(screen.getByText("D: 2回")).toBeInTheDocument();
+    expect(screen.getByText("A: 25.00% (5回)")).toBeInTheDocument();
+    expect(screen.getByText("B: 15.00% (3回)")).toBeInTheDocument();
+    expect(screen.getByText("C: 50.00% (10回)")).toBeInTheDocument();
+    expect(screen.getByText("D: 10.00% (2回)")).toBeInTheDocument();
   });
 
   it("renders correctly with some zero and some non-zero counts", () => {
@@ -42,9 +39,9 @@ describe("GachaCounts component", () => {
     };
     render(<GachaCounts resultCounts={mixedCounts} />);
 
-    expect(screen.getByText("A: 1回")).toBeInTheDocument();
-    expect(screen.getByText("B: 0回")).toBeInTheDocument();
-    expect(screen.getByText("C: 2回")).toBeInTheDocument();
-    expect(screen.getByText("D: 0回")).toBeInTheDocument();
+    expect(screen.getByText("A: 33.33% (1回)")).toBeInTheDocument();
+    expect(screen.getByText("B: 0.00% (0回)")).toBeInTheDocument();
+    expect(screen.getByText("C: 66.67% (2回)")).toBeInTheDocument();
+    expect(screen.getByText("D: 0.00% (0回)")).toBeInTheDocument();
   });
 });

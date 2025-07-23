@@ -34,10 +34,7 @@ describe("App component", () => {
     expect(screen.getByRole("button", { name: "ガチャを引く" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "10連ガチャを引く" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "履歴を見る" })).toBeInTheDocument();
-    expect(screen.getByText("A: 0回")).toBeInTheDocument();
-    expect(screen.getByText("B: 0回")).toBeInTheDocument();
-    expect(screen.getByText("C: 0回")).toBeInTheDocument();
-    expect(screen.getByText("D: 0回")).toBeInTheDocument();
+    expect(screen.getByText("まだガチャが実行されていません。")).toBeInTheDocument();
   });
 
   // Test cases for different gacha results based on backend probabilities
@@ -55,7 +52,7 @@ describe("App component", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("heading", { level: 1, name: gachaResult })).toBeInTheDocument();
-      expect(screen.getByText(`${gachaResult}: 1回`)).toBeInTheDocument();
+      expect(screen.getByText(`${gachaResult}: 100.00% (1回)`)).toBeInTheDocument();
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -64,8 +61,8 @@ describe("App component", () => {
 
   it("fetches 10 gacha results and updates the display", async () => {
     const mockGachaResults = [
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "X" },
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" },
+      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "A" }, { result: "B" },
     ];
     mockGachaResults.forEach((mockResult) => {
       fetchSpy.mockResolvedValueOnce({
@@ -89,10 +86,10 @@ describe("App component", () => {
         expect(screen.getAllByText(mockResult.result).length).toBeGreaterThanOrEqual(1);
       });
 
-      expect(screen.getByText("A: 2回")).toBeInTheDocument();
-      expect(screen.getByText("B: 2回")).toBeInTheDocument();
-      expect(screen.getByText("C: 2回")).toBeInTheDocument();
-      expect(screen.getByText("D: 2回")).toBeInTheDocument();
+      expect(screen.getByText("A: 30.00% (3回)")).toBeInTheDocument();
+      expect(screen.getByText("B: 30.00% (3回)")).toBeInTheDocument();
+      expect(screen.getByText("C: 20.00% (2回)")).toBeInTheDocument();
+      expect(screen.getByText("D: 20.00% (2回)")).toBeInTheDocument();
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(10);
