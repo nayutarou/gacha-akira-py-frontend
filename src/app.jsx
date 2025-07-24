@@ -7,6 +7,8 @@ import GachaCounts from "./components/GachaCounts";
 
 import TenPullDisplay from "./components/TenPullDisplay";
 
+const GACHA_API_URL = "http://127.0.0.1:8000/gacha";
+
 function App() {
   const { addGachaResult, resultCounts, resetGachaHistory } = useGacha();
   const [singleResult, setSingleResult] = useState({ result: "" });
@@ -28,12 +30,11 @@ function App() {
     }
   };
 
-  const handleClick = async () => {
+  const handleSingleGachaClick = async () => {
     setIsTenPull(false);
     try {
-      const response = await fetch("http://127.0.0.1:8000/gacha");
+      const response = await fetch(GACHA_API_URL);
       const data = await response.json();
-      console.log(data);
       setSingleResult(data);
       addGachaResult(data);
     } catch (error) {
@@ -41,14 +42,13 @@ function App() {
     }
   };
 
-  const handleClickTen = async () => {
+  const handleTenPullGachaClick = async () => {
     setIsTenPull(true);
     const results = [];
     try {
       for (let i = 0; i < 10; i++) {
-        const response = await fetch("http://127.0.0.1:8000/gacha");
+        const response = await fetch(GACHA_API_URL);
         const data = await response.json();
-        console.log(data);
         results.push(data);
         addGachaResult(data);
       }
@@ -73,8 +73,8 @@ function App() {
           <Result result={getDisplayResult()} />
         )}
         <div className="flex justify-center mt-4 space-x-4">
-          <Button handleClick={handleClick} text="ガチャを引く" />
-          <Button handleClick={handleClickTen} text="10連ガチャを引く" />
+          <Button handleClick={handleSingleGachaClick} text="ガチャを引く" />
+          <Button handleClick={handleTenPullGachaClick} text="10連ガチャを引く" />
         </div>
         <GachaCounts resultCounts={resultCounts} />
         <div className="flex items-center justify-center mt-4 space-x-4">
