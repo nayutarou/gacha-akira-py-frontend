@@ -29,7 +29,7 @@ describe("App component", () => {
             <Route path="/history" element={<HistoryPage />} />
           </Routes>
         </GachaProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
