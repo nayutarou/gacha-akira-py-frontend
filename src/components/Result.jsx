@@ -9,7 +9,6 @@ const colors = {
 };
 
 const Result = ({ result, small }) => {
-  console.log("Result component received result:", result);
   const containerClasses = small ? "w-24 h-24 mx-1 my-1" : "my-4 flex flex-col items-center justify-center w-3/4 max-w-lg";
   const innerDivClasses = small ? "p-4" : "p-12";
   const h1Classes = small ? "text-4xl" : (result.result === "ガチャを引きましょう" ? "text-4xl" : "text-9xl");

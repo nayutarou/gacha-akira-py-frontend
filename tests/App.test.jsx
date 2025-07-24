@@ -1,9 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { GachaProvider } from "../src/GachaContext";
 import App from "../src/app"; // Adjust import path
+import HistoryPage from "../src/pages/HistoryPage"; // HistoryPageをインポート
+import { mockTenPullResults } from "./test-data";
 
 describe("App component", () => {
   let fetchSpy;
@@ -18,13 +20,16 @@ describe("App component", () => {
     fetchSpy.mockRestore();
   });
 
-  const renderApp = () => {
+  const renderApp = (initialEntries = ["/"]) => {
     render(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={initialEntries}>
         <GachaProvider>
-          <App />
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/history" element={<HistoryPage />} />
+          </Routes>
         </GachaProvider>
-      </BrowserRouter>,
+      </MemoryRouter>,
     );
   };
 
@@ -60,10 +65,7 @@ describe("App component", () => {
   });
 
   it("fetches 10 gacha results and updates the display", async () => {
-    const mockGachaResults = [
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" },
-      { result: "A" }, { result: "B" }, { result: "C" }, { result: "D" }, { result: "A" }, { result: "B" },
-    ];
+    const mockGachaResults = mockTenPullResults;
     mockGachaResults.forEach((mockResult) => {
       fetchSpy.mockResolvedValueOnce({
         ok: true,
@@ -116,5 +118,53 @@ describe("App component", () => {
     expect(screen.getByRole("heading", { level: 1, name: "ガチャを引きましょう" })).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
+  });
+
+  it("displays single gacha result in Result component and updates GachaCounts", async () => {
+    const mockGachaResult = { result: "A" };
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockGachaResult,
+    });
+
+    renderApp();
+
+    const button = screen.getByRole("button", { name: "ガチャを引く" });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText("A")).toBeInTheDocument(); // Result component
+      expect(screen.getByText("A: 100.00% (1回)")).toBeInTheDocument(); // GachaCounts component
+    });
+  });
+
+  it("displays 10-pull gacha results in TenPullDisplay and updates GachaCounts", async () => {
+    mockTenPullResults.forEach((mockResult) => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResult,
+      });
+    });
+
+    renderApp();
+
+    const button = screen.getByRole("button", { name: "10連ガチャを引く" });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getAllByText(/^[ABCD]$/).length).toBe(10); // TenPullDisplay component
+      expect(screen.getByText("A: 30.00% (3回)")).toBeInTheDocument(); // GachaCounts component
+    });
+  });
+
+  it("navigates to history page", async () => {
+    renderApp();
+
+    const historyLink = screen.getByRole("link", { name: "履歴を見る" });
+    await userEvent.click(historyLink);
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { level: 1, name: "ガチャ履歴" })).toBeInTheDocument();
+    });
   });
 });
